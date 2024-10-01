@@ -8,7 +8,9 @@ using namespace std;
     cin.tie(0);                   \
     cout.tie(0);
 const int mx = 1e7 + 10;
-int cnt = 0;
+int cnt;  // every prime divisors frequency
+int cnt1 = 0; // number of prime divisor
+int nod = 1;  // number of all divisors
 bitset<mx> isPrime;
 vector<int> prime;
 void sieve(int n)
@@ -29,8 +31,10 @@ void sieve(int n)
     }
     isPrime[2] = 1;
     prime.push_back(2);
-    for(int i=3;i<=n;i+=2){
-        if(isPrime[i]){
+    for (int i = 3; i <= n; i += 2)
+    {
+        if (isPrime[i])
+        {
             prime.push_back(i);
         }
     }
@@ -44,18 +48,23 @@ vector<int> factorize(int n)
             break;
         if (n % p == 0)
         {
-            cnt++;
+             cnt1++;
+             cnt=0;
             while (n % p == 0)
             {
                 factor.push_back(p);
                 n = n / p;
+                cnt++;
             }
+            cnt++;
+            nod *= cnt;
         }
     }
+
     if (n > 1)
     {
         factor.push_back(n);
-        cnt++;
+        nod *= 2;
     }
     return factor;
 }
@@ -67,7 +76,8 @@ int main()
     int t;
     cin >> t;
     vector<int> factorization = factorize(t);
-    cout << cnt << endl;
+    cout << cnt1 << endl;
+    cout << nod << endl;
     for (auto r : factorization)
     {
         cout << r << " ";
