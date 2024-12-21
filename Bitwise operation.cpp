@@ -67,7 +67,7 @@ int main()
 {
     optimize();
     int a, b, c, d;
-    a = 5, b = 6, c = 7, d = 3;
+    a = 5, b = 10, c = 7, d = 3;
     int BitAND = a & b;
     int BitOR = a | b;
     int BitXOR = a ^ b;
@@ -77,6 +77,9 @@ int main()
     int rightShift = leftShift >> 1;
     int nthPositionValue1 = (b >> 1) & 1; // 1 number index
     int nthPositionValue0 = (b >> 0) & 1; // 0 number index
+    int also_flip = b | 1;
+    also_flip = also_flip & (~2);
+    also_flip = also_flip ^ (1 << 2);
 
     cout << " AND: " << BitAND << endl;
     cout << " OR: " << BitOR << endl;
@@ -87,6 +90,7 @@ int main()
     cout << " RightS: " << rightShift << endl;
     cout << "nthPositionValue1:" << nthPositionValue1 << endl;
     cout << "nthPositionValue0:" << nthPositionValue0 << endl;
+    cout << "Flip:" << also_flip << endl;
 
     ;
 }
