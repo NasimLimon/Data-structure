@@ -1,77 +1,90 @@
-// IN THE NAME OF SUPREME AND MERCIFUL GOD
+// IN THE NAME OF SUPREME & MERCIFUL GOD
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef long long ll;
-#define optimize()                \
-    ios_base::sync_with_stdio(0); \
-    cin.tie(0);                   \
-    cout.tie(0);
-ll gcd(ll a, ll b) { return __gcd(a, b); }
-ll lcm(ll a, ll b)
+#define endl '\n'
+#define optimize() ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+
+const int mx = 1e7 + 5;
+int lp[mx];             // lowest prime factor
+vector<int> primes;
+
+// Linear Sieve to fill lp[] and primes[]
+void linear_sieve(int n)
 {
-    return a * (b / gcd(a, b));
-}
-const int mx = 1e8 + 10;
-bitset<mx> isPrime;
-vector<int> prime;
-void sieve(int n)
-{
-    for (int i = 3; i <= n; i += 2)
-        isPrime[i] = 1;
-    int sq = sqrt(n);
-    for (int i = 3; i <= sq; i += 2)
+    for (int i = 2; i <= n; i++)
     {
-        if (isPrime[i])
+        if (lp[i] == 0)   // i is prime
         {
-            for (int j = i * i; j <= n; j += i)
-            {
-                isPrime[j] = 0;
-            }
+            lp[i] = i;
+            primes.push_back(i);
         }
-    }
-    isPrime[2] = 1;
-    prime.push_back(2);
-    for (int i = 3; i <= n; i += 2)
-    {
-        if (isPrime[i])
+
+        for (int p : primes)
         {
-            prime.push_back(i);
+            if (p > lp[i] || 1LL * i * p > n) // stop conditions
+                break;
+
+            lp[i * p] = p; // set lowest prime factor for i*p
         }
     }
 }
+
+// Prime factorization using lp[]
+vector<int> factorize(int x)
+{
+    vector<int> factors;
+    while (x > 1)
+    {
+        int p = lp[x];
+        while (x % p == 0)
+        {
+            factors.push_back(p);
+            x /= p;
+        }
+    }
+    return factors;
+}
+
+// PHI function using the formula φ(n) = n * ∏ (1 - 1/p_i)
 int PHI(int n)
 {
-    int phi = n;
-    for (auto p : prime)
-    {
-        if (1LL * p * p > n)
-            break;
-        if (n % p == 0)
-        {
-            while (n % p == 0)
-            {
-                n = n / p;
-            }
-            phi *= (p - 1);
-            phi /= p;
-        }
-    }
-    if (n > 1)
-    {
-        phi *= (n - 1);
-        phi /= n;
-    }
-    return phi;
+    vector<int> f = factorize(n);
+    set<int> unique_primes(f.begin(), f.end());
+
+    long long res = n;
+    for (int p : unique_primes)
+        res = res / p * (p - 1);  // n * (1 - 1/p) = n * (p-1)/p
+
+    return (int)res;
 }
+
 int main()
 {
     optimize();
-    int lim = 1e8;
-    sieve(lim);
-    int n;
-    cin >> n;
-    int x = PHI(n);
-    cout << x << endl;
+
+    int N = 1e7;
+    linear_sieve(N);
+
+    // Example: first 50 primes
+    cout << "First 50 primes: ";
+    for (int i = 0; i < 50; i++)
+        cout << primes[i] << " ";
+    cout << endl;
+
+    // Factorization query
+    int num;
+    cout << "Enter a number to factorize and calculate PHI: ";
+    cin >> num;
+
+    vector<int> factors = factorize(num);
+    cout << "Prime Factors: ";
+    for (int f : factors)
+        cout << f << " ";
+    cout << endl;
+
+    // PHI calculation
+    cout << "φ(" << num << ") = " << PHI(num) << endl;
+
     return 0;
 }
