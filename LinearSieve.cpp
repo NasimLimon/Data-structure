@@ -1,4 +1,15 @@
+
+১) ।oop চলছে ১...N
+২) যার lp[i] নেই সে prime;  lp[i]==0
+৩) primes list-এ রাখো
+৪) সব primes দিয়ে composite বানাও:  x = i*p
+৫) LPF rule ভাঙলে break;  p > lp[i]
+৬) Range rule ভাঙলে break;  p * i > n
+৭) composite x এর Ip সেট করো Ip[x] = p;  lp[p * i] = p
+
+
 // IN THE NAME OF SUPREME & MERCIFUL GOD
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -40,3 +51,6 @@ int main()
     for (int i = 0; i < 50; i++)
         cout << primes[i] << " ";
 }
+
+
+
