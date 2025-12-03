@@ -1,72 +1,75 @@
-// IN THE NAME OF SUPREME AND MERCIFUL GOD
-
+// IN THE NAME OF SUPREME & MERCIFUL GOD
 #include <bits/stdc++.h>
 using namespace std;
 
-#define optimize()                \
-    ios_base::sync_with_stdio(0); \
-    cin.tie(0);                   \
-    cout.tie(0);
-const int mx = 1e6 + 10;
-bitset<mx> isPrime;
-vector<int> prime;
-void sieve(int n)
+#define endl '\n'
+#define optimize() ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+
+const int mx = 1e7 + 5;
+int lp[mx];             // lowest prime factor
+vector<int> primes;
+
+// Linear Sieve to fill lp[] and primes[]
+void linear_sieve(int n)
 {
-    for (int i = 3; i <= n; i += 2)
-        isPrime[i] = 1;
-    int sq = sqrt(n);
-    for (int i = 3; i <= sq; i += 2)
+    for (int i = 2; i <= n; i++)
     {
-        if (isPrime[i])
+        if (lp[i] == 0)   // i is prime
         {
-            for (int j = i * i; j <= n; j += i)
-            {
-                isPrime[j] = 0;
-            }
+            lp[i] = i;
+            primes.push_back(i);
         }
-    }
-    isPrime[2] = 1;
-    prime.push_back(2);
-    for (int i = 3; i <= n; i += 2)
-    {
-        if (isPrime[i])
+
+        for (int p : primes)
         {
-            prime.push_back(i);
+            if (p > lp[i] || 1LL * i * p > n) // stop conditions
+                break;
+
+            lp[i * p] = p; // set lowest prime factor for i*p
         }
     }
 }
-vector<int> primeFactor(int n)
+
+// Prime factorization using lp[]
+vector<int> factorize(int x)
 {
-    vector<int> factor;
-    for (auto p : prime)
+    vector<int> factors;
+    while (x > 1)
     {
-        if (p * p > n)
-            break;
-        if (n % p == 0)
+        int p = lp[x];
+        while (x % p == 0)
         {
-            while (n % p == 0)
-            {
-                factor.push_back(p);
-                n = n / p;
-            }
+            factors.push_back(p);
+            x /= p;
         }
     }
-    if (n > 1)
-        factor.push_back(n);
-    return factor;
+    return factors;
 }
+
 int main()
 {
     optimize();
-    int lim = 1e6 + 10;
-    sieve(lim);
-    int nn;
-    cin >> nn;
-    vector<int> factorization = primeFactor(nn);
-    for (auto q : factorization)
-    {
-        cout << q << " ";
-    }
+
+    int N = 1e7;
+    linear_sieve(N);
+
+    // Example: first 50 primes
+    cout << "First 50 primes: ";
+    for (int i = 0; i < 50; i++)
+        cout << primes[i] << " ";
+    cout << endl;
+
+    // Example: Factorization query
+    int num;
+    cout << "Enter a number to factorize: ";
+    cin >> num;
+
+    vector<int> factors = factorize(num);
+
+    cout << "Prime Factors: ";
+    for (int f : factors)
+        cout << f << " ";
+    cout << endl;
 
     return 0;
 }
